@@ -20,6 +20,11 @@ plot!(x_extp, y_extp2, label="")
 f(x) = sin.(π*(x.-0.5))
 sinX = f(x)
 plot( x, sinX, label="", color=:blue)
+plot!(x_extp, f.(x_extp), label="Actual f(x)", color=:blue,
+        legend=:topleft)
 plot!(x_extp, LagrangeExtrap.((x[end-2:end],), (sinX[end-2:end],), x_extp),
-        label="")
-plot!(x_extp, f.(x_extp), label="Actual f(x)", color=:blue)
+        label="2nd order approx.", linewidth=3,
+        color=:red)
+plot!(x_extp, LagrangeExtrap.((x[end-4:end],), (sinX[end-4:end],), x_extp),
+        label="4th order approx.", linewidth=2,
+        color=:green, linestyle=:dash)
