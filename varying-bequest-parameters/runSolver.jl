@@ -20,7 +20,6 @@ function runSolver(additional_end_wealth, bequest_util)
                                 -u(c_in) - bequest_util(rhs_bc - c_in)
                         result = optimize(to_minimize, c_min,
                                                 rhs_bc + Ψ_1, GoldenSection())
-
                         V_t[T, i_x] = -result.minimum
                         c_t[T, i_x] =  result.minimizer
                 end
@@ -39,7 +38,8 @@ function runSolver(additional_end_wealth, bequest_util)
                                                                 peektimer())
                 periods_left -= 1
                 # Prepare new interpolation object for period t+1
-                V_tp = LinearInterpolation(X, V_t[t+1, :])
+                V_tp = LinearInterpolation(X, V_t[t+1, :],
+                                                extrapolation_bc=Line())
 
                 #  Precomputation step
                 W_t = -1.0e10.*ones(S_size)
@@ -48,7 +48,7 @@ function runSolver(additional_end_wealth, bequest_util)
                         #       constraint.
                         if s_choice >= s_min
                                 # Compute Cash-on-Hand Less Income
-                                CoHLI = (1+ir(s_choice))*s_choice
+                                CoHLI = (1.0+r)*s_choice
                                 W_t[i_s] = β*Expect(t+1, CoHLI, V_tp)
                         end
                 end
